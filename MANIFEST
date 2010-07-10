@@ -1,0 +1,9 @@
+config.yaml
+lib/Amazon.pm
+lib/Amazon/L10N.pm
+lib/Amazon/L10N/en_us.pm
+lib/Amazon/L10N/ja.pm
+lib/Amazon/S3.pm
+lib/Amazon/S3/Asset.pm
+LICENSE
+tmpl/amazon_blog_config.tmpl

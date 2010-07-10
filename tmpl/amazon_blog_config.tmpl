@@ -1,0 +1,37 @@
+<mtapp:setting
+	id="amazon_s3_access_key"
+	label="<__trans phrase="Access Key">"
+>
+<input type="text" id="amazon_s3_access_key" name="amazon_s3_access_key" value="<mt:Var name="amazon_s3_access_key" />" />
+</mtapp:setting>
+
+<mtapp:setting
+	id="amazon_s3_secret_key"
+	label="<__trans phrase="Secret Key">"
+>
+<input type="text" id="amazon_s3_secret_key" name="amazon_s3_secret_key" value="<mt:Var name="amazon_s3_secret_key" />" />
+</mtapp:setting>
+
+<mtapp:setting
+	id="amazon_s3_bucket"
+	label="<__trans phrase="Bucket">"
+>
+<input type="text" id="amazon_s3_bucket" name="amazon_s3_bucket" value="<mt:Var name="amazon_s3_bucket" />" />
+</mtapp:setting>
+
+<mtapp:setting
+	id="amazon_s3_distribution_domain_names"
+	label="<__trans phrase="Distribution domain names (Optional)">"
+>
+<input type="text" id="amazon_s3_distribution_domain_names" name="amazon_s3_distribution_domain_names" value="<mt:Var name="amazon_s3_distribution_domain_names" />" /><br />
+<__trans phrase="Domain names can be specified by delimiting this value by the comma." /> 
+</mtapp:setting>
+
+<mtapp:setting
+	id="amazon_s3_suffixes"
+	label="<__trans phrase="Suffixes">"
+>
+<input type="text" id="amazon_s3_suffixes" name="amazon_s3_suffixes" value="<mt:Var name="amazon_s3_suffixes" />" /><br />
+<__trans phrase="Suffixes can be specified by delimiting this value by the comma." /><br />
+<__trans phrase="All files will be uploaded if this value is empty." /> 
+</mtapp:setting>
