@@ -1,4 +1,4 @@
-# Copyright (c) 2010 ToI Inc. All rights reserved.
+# Copyright (c) 2011 ToI Inc. All rights reserved.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-package Amazon::S3::Asset;
+package MT::Amazon::S3::Asset;
 
 use strict;
 use warnings;
@@ -72,9 +72,9 @@ sub url {
 		$hash->{$url};
 	}
 	elsif ($url && $asset->file_path) {
-		require Amazon::S3;
+		require MT::Amazon::S3;
 
-		my ($s3, $bucket) = &Amazon::S3::bucket($scope);
+		my ($s3, $bucket) = &MT::Amazon::S3::bucket($scope);
 		$s3 or return $original_url;
 
 		my $lc_time = POSIX::setlocale(&POSIX::LC_TIME);
@@ -89,7 +89,7 @@ sub url {
 
 		POSIX::setlocale(&POSIX::LC_TIME, $lc_time);
 
-		my $new_url = &Amazon::S3::new_url($scope, $url);
+		my $new_url = &MT::Amazon::S3::new_url($scope, $url);
 
 		$hash->{$url} = $new_url;
 		$asset->meta('amazon_s3_urls', $hash);
@@ -125,7 +125,7 @@ sub thumbnail_url {
 	return $original_url unless &suffix_is_upload($scope, $asset->file_ext);
 
 	my $hash = $asset->amazon_s3_urls || {};
-	# 強制的に初期化
+	# force initialize
 	# $hash = {};
 
 	if ($hash->{$url}) {
@@ -136,9 +136,9 @@ sub thumbnail_url {
 
 		my ($file, $width, $height) = $asset->thumbnail_file(@_);
 
-		require Amazon::S3;
+		require MT::Amazon::S3;
 
-		my ($s3, $bucket) = &Amazon::S3::bucket($scope);
+		my ($s3, $bucket) = &MT::Amazon::S3::bucket($scope);
 		$s3 or return $original_url;
 
 		my $lc_time = POSIX::setlocale(&POSIX::LC_TIME);
@@ -153,7 +153,7 @@ sub thumbnail_url {
 
 		POSIX::setlocale(&POSIX::LC_TIME, $lc_time);
 
-		my $new_url = &Amazon::S3::new_url($scope, $url);
+		my $new_url = &MT::Amazon::S3::new_url($scope, $url);
 
 		$hash->{$url} = $new_url;
 		$asset->amazon_s3_urls($hash);

@@ -35,3 +35,11 @@
 <__trans phrase="Suffixes can be specified by delimiting this value by the comma." /><br />
 <__trans phrase="All files will be uploaded if this value is empty." /> 
 </mtapp:setting>
+
+<mtapp:setting
+	id="amazon_s3_for_all_template"
+	label="<__trans phrase="For all template">"
+>
+<input type="checkbox" id="amazon_s3_for_all_template" name="amazon_s3_for_all_template" value="1" <mt:If name="amazon_s3_for_all_template">checked="checked"</mt:If> /><br />
+<__trans phrase="Upload all template to S3." /> 
+</mtapp:setting>

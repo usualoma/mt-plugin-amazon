@@ -1,4 +1,4 @@
-# Copyright (c) 2010 ToI Inc. All rights reserved.
+# Copyright (c) 2011 ToI Inc. All rights reserved.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -18,12 +18,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-package Amazon::L10N::en_us;
+package MT::Amazon::L10N::en_us;
 
 use strict;
 use warnings;
 
-use base 'Amazon::L10N';
+use base 'MT::Amazon::L10N';
 use vars qw( %Lexicon );
 %Lexicon = ();
 

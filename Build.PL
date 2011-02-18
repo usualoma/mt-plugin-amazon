@@ -176,7 +176,7 @@ my $builder = $class->new(
     dist_author         => 'Taku Amano <taku@toi-planning.net>',
     dist_version        => $yaml->{version},
     module_name         => $yaml->{name} . '::App',
-    license             => 'MIT License',
+    license             => 'mit',
     add_to_cleanup      => [ $yaml->{name} . '-*' ],
 );
 

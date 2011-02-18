@@ -1,7 +1,7 @@
 #plugin information
 id: Amazon
 name: Amazon
-version: 0.01
+version: 0.02
 
 #about this plugin
 description: <__trans phrase="Function set for Amazon API">
@@ -11,9 +11,9 @@ plugin_link: http://tec.toi-planning.net/mt/amazon/
 doc_link: http://tec.toi-planning.net/mt/amazon/manual
 
 #Localization
-l10n_class: Amazon::L10N
+l10n_class: MT::Amazon::L10N
 
-init_app: $Amazon::Amazon::init_app
+init_app: $Amazon::MT::Amazon::init_app
 
 settings:
     amazon_s3_access_key:
@@ -21,23 +21,24 @@ settings:
     amazon_s3_bucket:
     amazon_s3_distribution_domain_names:
     amazon_s3_suffixes:
+    amazon_s3_for_all_template:
 
 blog_config_template: amazon_blog_config.tmpl
 
-schema_version: 7
+schema_version: 8
 object_types:
     template:
         amazon_s3_enabled:
             type: boolean
-            default: false
-            not_null: false
+            default: 0
+            not_null: 0
 
 tags:
     help_url: http://tec.toi-planning.net/mt/amazon/tags#%t
     function:
-        Link: $Amazon::Amazon::S3::_hdlr_link
+        Link: $Amazon::MT::Amazon::S3::_hdlr_link
 
 callbacks:
-    build_file: $Amazon::Amazon::S3::build_file
-    MT::Template::pre_save: $Amazon::Amazon::S3::template_pre_save
-    MT::App::CMS::template_param.edit_template: $Amazon::Amazon::S3::param_edit_template
+    build_file: $Amazon::MT::Amazon::S3::build_file
+    MT::Template::pre_save: $Amazon::MT::Amazon::S3::template_pre_save
+    MT::App::CMS::template_param.edit_template: $Amazon::MT::Amazon::S3::param_edit_template
