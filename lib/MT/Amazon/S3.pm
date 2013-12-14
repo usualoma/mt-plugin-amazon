@@ -35,11 +35,11 @@ sub new_url {
 
 	my $config = &plugin->get_config_hash($scope);
 	if ($config->{'amazon_s3_distribution_domain_names'}) {
-		$domain_name_index++;
 		my @domains = split(
 			',', $config->{'amazon_s3_distribution_domain_names'}
 		);
-		'http://' .$domains[$domain_name_index % scalar(@domains)]. '/' . $url . '?ts=' . time;
+		'http://' .$domains[$domain_name_index]. '/' . $url . '?ts=' . time;
+		$domain_name_index = ($domain_name_index + 1) % @domains;
 	}
 	else {
 		'http://' . $config->{'amazon_s3_bucket'} . '.s3.amazonaws.com/' . $url;
