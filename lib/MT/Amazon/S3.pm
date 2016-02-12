@@ -24,6 +24,7 @@ use strict;
 use warnings;
 
 use POSIX;
+use URI;
 
 sub plugin {
 	MT->component('Amazon');
@@ -32,6 +33,9 @@ sub plugin {
 my $domain_name_index = 0;
 sub new_url {
 	my ($scope, $url) = @_;
+
+	my $path = URI->new($url)->path;
+	$path =~ s{^/*}{};
 
 	my $config = &plugin->get_config_hash($scope);
 	if ($config->{'amazon_s3_distribution_domain_names'}) {
@@ -44,11 +48,12 @@ sub new_url {
 		my @domains = split(
 			',', $config->{'amazon_s3_distribution_domain_names'}
 		);
-		'http://' .$domains[$domain_name_index]. '/' . $url . '?ts=' . time;
+		my $res = 'http://' .$domains[$domain_name_index]. '/' . $path . $ts;
 		$domain_name_index = ($domain_name_index + 1) % @domains;
+		$res;
 	}
 	else {
-		'http://' . $config->{'amazon_s3_bucket'} . '.s3.amazonaws.com/' . $url;
+		'http://' . $config->{'amazon_s3_bucket'} . '.s3.amazonaws.com/' . $path;
 	}
 }
 

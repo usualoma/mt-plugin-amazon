@@ -24,6 +24,7 @@ use strict;
 use warnings;
 
 use POSIX;
+use URI;
 
 sub plugin {
 	MT->component('Amazon');
@@ -45,16 +46,35 @@ sub suffix_is_upload {
 	}
 }
 
+sub _to_relative_url {
+	my ($blog, $url) = @_;
+
+	if ( $url =~ m!^\%([ras])! ) {
+		my $root
+			= !$blog
+			|| $1 eq 's' ? MT->instance->support_directory_url
+			: $1 eq 'r'  ? $blog->site_url
+			:              $blog->archive_url;
+		$root =~ s!/$!!;
+		$url =~ s!^\%[ras]!$root!;
+	}
+	$url = URI->new($url)->path;
+	$url =~ s{\A/*}{};
+
+	$url;
+}
+
 sub url {
 	my $original = shift;
 	my $url = $original->(@_);
-	my $original_url = $url;
-	$url =~ s{\Ahttp://[^/]*}{};
-	$url =~ s{\A/*}{};
-
 	my ($asset) = @_;
+
+	my $blog         = $asset->blog;
+	my $original_url = $url;
+	$url             = _to_relative_url($blog, $url);
+
 	my $scope = do {
-		if (my $blog = $asset->blog) {
+		if ($blog) {
 			'blog:' . $blog->id;
 		}
 		else {
@@ -82,7 +102,7 @@ sub url {
 
 		# store a file in the bucket
 		$bucket->add_key_filename($url, $asset->file_path, {
-			acl_short => 'public-read',
+			acl_short    => 'public-read',
 			content_type => $asset->mime_type,
 			expires      => POSIX::strftime("%a, %e %b %H:%M:%S %Y GMT", localtime(time+473040000)),
 		}) or die MT->log($s3->err . ": " . $s3->errstr);
@@ -106,15 +126,26 @@ sub url {
 
 sub thumbnail_url {
 	my $original = shift;
-	my ($url, $with, $height) = $original->(@_);
+	my ($asset, %param) = @_;
 
-	my $original_url = $url;
-	$url =~ s{\Ahttp://[^/]*}{};
-	$url =~ s{\A/*}{};
+	if ($param{Pseudo}) {
+		return $original->(@_);
+	}
 
+	my ($url, $width, $height) = $original->(@_);
+	(_thumbnail_url($url, @_), $width, $height);
+}
+
+sub _thumbnail_url {
+	my $url     = shift;
 	my ($asset) = @_;
+
+	my $blog         = $asset->blog;
+	my $original_url = $url;
+	$url             = _to_relative_url($blog, $url);
+
 	my $scope = do {
-		if (my $blog = $asset->blog) {
+		if ($blog) {
 			'blog:' . $blog->id;
 		}
 		else {
@@ -146,7 +177,7 @@ sub thumbnail_url {
 
 		# store a file in the bucket
 		$bucket->add_key_filename($url, $file, {
-			acl_short => 'public-read',
+			acl_short    => 'public-read',
 			content_type => $asset->mime_type,
 			expires      => POSIX::strftime("%a, %e %b %H:%M:%S %Y GMT", localtime(time+473040000)),
 		}) or die MT->log($s3->err . ": " . $s3->errstr);
