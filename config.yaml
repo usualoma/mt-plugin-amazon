@@ -20,6 +20,8 @@ settings:
     amazon_s3_secret_key:
     amazon_s3_bucket:
     amazon_s3_distribution_domain_names:
+    amazon_s3_cdn_add_hash_value:
+        default: 1
     amazon_s3_suffixes:
     amazon_s3_for_all_template:
 

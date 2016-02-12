@@ -35,6 +35,12 @@ sub new_url {
 
 	my $config = &plugin->get_config_hash($scope);
 	if ($config->{'amazon_s3_distribution_domain_names'}) {
+		my $ts = '';
+		if ($config->{amazon_s3_cdn_add_hash_value}) {
+			require Digest::MD5;
+			$ts = '?ts=' . substr(Digest::MD5::md5_hex(rand), 0, 7);
+		}
+
 		my @domains = split(
 			',', $config->{'amazon_s3_distribution_domain_names'}
 		);

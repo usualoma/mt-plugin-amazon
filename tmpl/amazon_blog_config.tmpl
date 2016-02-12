@@ -28,6 +28,14 @@
 </mtapp:setting>
 
 <mtapp:setting
+	id="amazon_s3_cdn_add_hash_value"
+	label="<__trans phrase="Append Random Value">"
+>
+<input type="checkbox" id="amazon_s3_cdn_add_hash_value" name="amazon_s3_cdn_add_hash_value" value="1" <mt:If name="amazon_s3_cdn_add_hash_value">checked="checked"</mt:If> /><br />
+<__trans phrase="Append random value to the generated URL. Like '?ts=abcdefg'. This feature enables to override existing asset. You may need to do update your CND settings." />
+</mtapp:setting>
+
+<mtapp:setting
 	id="amazon_s3_suffixes"
 	label="<__trans phrase="Suffixes">"
 >
