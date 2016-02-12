@@ -44,3 +44,4 @@ callbacks:
     build_file: $Amazon::MT::Amazon::S3::build_file
     MT::Template::pre_save: $Amazon::MT::Amazon::S3::template_pre_save
     MT::App::CMS::template_param.edit_template: $Amazon::MT::Amazon::S3::param_edit_template
+    MT::App::CMS::cms_upload_file: $Amazon::MT::Amazon::S3::cms_upload_file

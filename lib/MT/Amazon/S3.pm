@@ -220,5 +220,15 @@ sub param_edit_template {
     );
 }
 
+sub cms_upload_file {
+    my ($cb, %param) = @_;
+
+    my $asset = $param{asset};
+
+	$asset->amazon_s3_urls({});
+	$asset->save or
+		die MT->log($asset->errstr);
+}
+
 
 1;
