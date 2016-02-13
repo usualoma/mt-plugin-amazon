@@ -1,72 +1,77 @@
 
 package LWP::UserAgent::Determined;
 
-$VERSION = '1.05';
+$VERSION = '1.07';
 use      LWP::UserAgent ();
 @ISA = ('LWP::UserAgent');
 
 use strict;
 die "Where's _elem?!!?" unless __PACKAGE__->can('_elem');
 
-sub timing                { shift->_elem('timing' , @_) }
-sub codes_to_determinate  { shift->_elem('codes_to_determinate' , @_) }
+sub timing                     { shift->_elem('timing' , @_) }
+sub codes_to_determinate       { shift->_elem('codes_to_determinate' , @_) }
 sub before_determined_callback { shift->_elem('before_determined_callback' , @_) }
-sub  after_determined_callback { shift->_elem( 'after_determined_callback' , @_) }
+sub after_determined_callback  { shift->_elem( 'after_determined_callback' , @_) }
 
 #==========================================================================
 
 sub simple_request {
-  my($self, @args) = @_;
-  my(@timing_tries) = ( $self->timing() =~ m<(\d+(?:\.\d+)*)>g );
-  my $determination = $self->codes_to_determinate();
+    my ( $self, @args ) = @_;
+    my (@timing_tries) = ( $self->timing() =~ m<(\d+(?:\.\d+)*)>g );
+    my $determination = $self->codes_to_determinate();
 
-  my $resp;
-  my $before_c = $self->before_determined_callback;
-  my $after_c  = $self->after_determined_callback;
-  foreach my $pause_if_unsuccessful (@timing_tries, undef) {
-    
-    $before_c and $before_c->(
-      $self, \@timing_tries, $pause_if_unsuccessful, $determination, \@args);
-    $resp = $self->SUPER::simple_request(@args);
-    $after_c and $after_c->(
-      $self, \@timing_tries, $pause_if_unsuccessful, $determination, \@args, $resp);
+    my $resp;
+    my $before_c = $self->before_determined_callback;
+    my $after_c  = $self->after_determined_callback;
 
-    my $code = $resp->code;
-    my $message = $resp->message;
-    $message =~ s/\s+$//s;
-    unless( $determination->{$code} ) { # normal case: all is well (or 404, etc)
-      return $resp;
+    my $request = $args[0];
+    foreach my $pause_if_unsuccessful ( @timing_tries, undef ) {
+        $args[0] = $request->clone;
+        $before_c and $before_c->(
+            $self, \@timing_tries, $pause_if_unsuccessful, $determination,
+            \@args
+        );
+        $resp = $self->SUPER::simple_request(@args);
+        $after_c and $after_c->(
+            $self, \@timing_tries, $pause_if_unsuccessful, $determination,
+            \@args, $resp
+        );
+
+        my $code = $resp->code;
+        unless ( $determination->{$code} ) {
+            # normal case: all is well (or 404, etc)
+            return $resp;
+        }
+        if ( defined $pause_if_unsuccessful ) {
+            # it's undef only on the last
+            sleep $pause_if_unsuccessful if $pause_if_unsuccessful;
+        }
     }
-    if(defined $pause_if_unsuccessful) { # it's undef only on the last
 
-      sleep $pause_if_unsuccessful if $pause_if_unsuccessful;
-    }
-  }
-  
-  return $resp;
+    return $resp;
 }
 
 #--------------------------------------------------------------------------
 
 sub new {
-  my $self = shift->SUPER::new(@_);
-  $self->_determined_init();
-  return $self;
+    my $self = shift->SUPER::new(@_);
+    $self->_determined_init();
+    return $self;
 }
 
 #--------------------------------------------------------------------------
 
 sub _determined_init {
-  my $self = shift;
-  $self->timing( '1,3,15' );
-  $self->codes_to_determinate( { map { $_=>1 }
-   '408', # Request Timeout
-   '500', # Internal Server Error
-   '502', # Bad Gateway
-   '503', # Service Unavailable
-   '504', # Gateway Timeout
-  } );
-  return;
+    my $self = shift;
+    $self->timing('1,3,15');
+    $self->codes_to_determinate( { map { $_ => 1 }
+        '408', # Request Timeout
+        '500', # Internal Server Error
+        '502', # Bad Gateway
+        '503', # Service Unavailable
+        '504', # Gateway Timeout
+    } );
+    return;
 }
 
 #==========================================================================
@@ -215,7 +220,7 @@ L<LWP>, L<LWP::UserAgent>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright 2004, Sean M. Burke C<sburke@cpan.org>, all rights
+Copyright 2004, Sean M. Burke, all rights
 reserved.  This program is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.
 
@@ -226,7 +231,9 @@ merchantability or fitness for a particular purpose.
 
 =head1 AUTHOR
 
-Sean M. Burke, C<sburke@cpan.org>
+Originally created by Sean M. Burke, C<sburke@cpan.org>
+
+Currently maintained by Jesse Vincent C<jesse@fsck.com>
 
 =cut
 
