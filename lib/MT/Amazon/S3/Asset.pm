@@ -25,6 +25,10 @@ use warnings;
 
 use POSIX;
 use URI;
+use Sub::Retry;
+
+use constant RETRY_TIMES => 3;
+use constant RETRY_DELAY => 1;
 
 sub plugin {
 	MT->component('Amazon');
@@ -44,6 +48,28 @@ sub suffix_is_upload {
 	else {
 		1;
 	}
+}
+
+sub _add_key_filename {
+	my ($s3, $bucket, $url, $file, $content_type) = @_;
+
+	my $lc_time = POSIX::setlocale(&POSIX::LC_TIME);
+	POSIX::setlocale(&POSIX::LC_TIME, 'C');
+
+	# store a file in the bucket
+	retry RETRY_TIMES, RETRY_DELAY, sub {
+		$bucket->add_key_filename($url, $file, {
+			acl_short    => 'public-read',
+			content_type => $content_type,
+			expires      => POSIX::strftime("%a, %e %b %H:%M:%S %Y GMT", localtime(time+473040000)),
+		});
+	}, sub {
+		my $res = shift;
+		MT->instance->log($s3->err . ": " . $s3->errstr) unless $res;
+		!$res;
+	} or die $s3->err . ": " . $s3->errstr;
+
+	POSIX::setlocale(&POSIX::LC_TIME, $lc_time);
 }
 
 sub _to_relative_url {
@@ -97,17 +123,7 @@ sub url {
 		my ($s3, $bucket) = &MT::Amazon::S3::bucket($scope);
 		$s3 or return $original_url;
 
-		my $lc_time = POSIX::setlocale(&POSIX::LC_TIME);
-		POSIX::setlocale(&POSIX::LC_TIME, 'C');
-
-		# store a file in the bucket
-		$bucket->add_key_filename($url, $asset->file_path, {
-			acl_short    => 'public-read',
-			content_type => $asset->mime_type,
-			expires      => POSIX::strftime("%a, %e %b %H:%M:%S %Y GMT", localtime(time+473040000)),
-		}) or die MT->log($s3->err . ": " . $s3->errstr);
-
-		POSIX::setlocale(&POSIX::LC_TIME, $lc_time);
+		_add_key_filename($s3, $bucket, $url, $asset->file_path, $asset->mime_type);
 
 		my $new_url = &MT::Amazon::S3::new_url($scope, $url);
 
@@ -172,17 +188,7 @@ sub _thumbnail_url {
 		my ($s3, $bucket) = &MT::Amazon::S3::bucket($scope);
 		$s3 or return $original_url;
 
-		my $lc_time = POSIX::setlocale(&POSIX::LC_TIME);
-		POSIX::setlocale(&POSIX::LC_TIME, 'C');
-
-		# store a file in the bucket
-		$bucket->add_key_filename($url, $file, {
-			acl_short    => 'public-read',
-			content_type => $asset->mime_type,
-			expires      => POSIX::strftime("%a, %e %b %H:%M:%S %Y GMT", localtime(time+473040000)),
-		}) or die MT->log($s3->err . ": " . $s3->errstr);
-
-		POSIX::setlocale(&POSIX::LC_TIME, $lc_time);
+		_add_key_filename($s3, $bucket, $url, $file, $asset->mime_type);
 
 		my $new_url = &MT::Amazon::S3::new_url($scope, $url);
 
