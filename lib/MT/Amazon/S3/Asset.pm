@@ -92,6 +92,8 @@ sub _to_relative_url {
 
 sub url {
 	my $original = shift;
+	my $is_setter = scalar(@_) >= 2;
+
 	my $url = $original->(@_);
 	my ($asset) = @_;
 
@@ -123,7 +125,15 @@ sub url {
 		my ($s3, $bucket) = &MT::Amazon::S3::bucket($scope);
 		$s3 or return $original_url;
 
-		_add_key_filename($s3, $bucket, $url, $asset->file_path, $asset->mime_type);
+		if ($is_setter && ! ($asset->file_path && $asset->mime_type)) {
+			return $original_url;
+		}
+		my $mime_type = $asset->mime_type;
+		if (! $mime_type && $asset->parent && (my $parent = MT->model('asset')->load($asset->parent))) {
+			$mime_type = $parent->mime_type;
+		}
+
+		_add_key_filename($s3, $bucket, $url, $asset->file_path, $mime_type);
 
 		my $new_url = &MT::Amazon::S3::new_url($scope, $url);
 
