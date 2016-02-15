@@ -2,6 +2,7 @@ config.yaml
 extlib/Amazon/S3.pm
 extlib/Amazon/S3/Bucket.pm
 extlib/LWP/UserAgent/Determined.pm
+extlib/Sub/Retry.pm
 lib/MT/Amazon.pm
 lib/MT/Amazon/L10N.pm
 lib/MT/Amazon/L10N/en_us.pm

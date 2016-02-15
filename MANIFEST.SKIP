@@ -52,3 +52,4 @@ support
 
 README.md
 ^MYMETA.yml$
+^MYMETA\.json$
