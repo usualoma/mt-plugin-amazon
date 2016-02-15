@@ -37,8 +37,8 @@ use vars qw( %Lexicon );
 	'Bucket' => 'Bucket名',
 	'Distribution domain names (Optional)' => 'CDNのドメイン名(任意)',
 	'Append Random Value' => 'URLにクエリを付加する',
-    "Append random value to the generated URL. Like '?ts=abcdefg'. This feature enables to override existing asset. You may need to do update your CND settings." =>
-    "CNDから配信されるアイテムに、「?ts=abcdefg」のようにランダムな値を付加します。<br />同名のファイル名でアイテムを上書きした場合にこの値が更新されるので、<br />上書き時にCNDからも別のファイルをダウンロードさせることができます。<br />(CloudFront の場合は、「Forward Query Strings」を有効にする必要があります)",
+    "Append random value to the generated URL. Like '?ts=abcdefg'. This feature enables to override existing asset. You may need to do update your CDN settings." =>
+    "CDNから配信されるアイテムに、「?ts=abcdefg」のようにランダムな値を付加します。<br />同名のファイル名でアイテムを上書きした場合にこの値が更新されるので、<br />上書き時にCDNからも別のファイルをダウンロードさせることができます。<br />(CloudFront の場合は、「Forward Query Strings」を有効にする必要があります)",
 	'Suffixes' => 'アップロードする拡張子',
 	'Suffixes can be specified by delimiting this value by the comma.' =>
 	'拡張子を「,」で区切って複数指定できます。',
