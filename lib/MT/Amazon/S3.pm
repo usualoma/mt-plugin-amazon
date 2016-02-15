@@ -67,7 +67,7 @@ sub bucket {
 		! $config->{'amazon_s3_access_key'} ||
 		! $config->{'amazon_s3_secret_key'}
 	) {
-		(undef, undef);
+		return (undef, undef);
 	}
 
 	my $s3 = Amazon::S3->new(
