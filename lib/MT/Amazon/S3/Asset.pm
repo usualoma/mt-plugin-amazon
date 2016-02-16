@@ -26,6 +26,7 @@ use warnings;
 use POSIX;
 use URI;
 use Sub::Retry;
+use MT::Util qw(decode_url);
 
 use constant RETRY_TIMES => 3;
 use constant RETRY_DELAY => 1;
@@ -55,6 +56,11 @@ sub _add_key_filename {
 
 	my $lc_time = POSIX::setlocale(&POSIX::LC_TIME);
 	POSIX::setlocale(&POSIX::LC_TIME, 'C');
+
+	$url = Encode::encode(MT->config->PublishCharset, decode_url($url));
+	if (! -e $file) {
+		$file = Encode::encode(MT->config->PublishCharset, decode_url($file));
+	}
 
 	# store a file in the bucket
 	retry RETRY_TIMES, RETRY_DELAY, sub {
