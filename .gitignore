@@ -1,0 +1,12 @@
+*~
+*.swp
+*.tar.gz
+*.zip
+Makefile
+Makefile.old
+MANIFEST
+MANIFEST.bak
+MYMETA.*
+blib
+pm_to_blib
+node_modules/
