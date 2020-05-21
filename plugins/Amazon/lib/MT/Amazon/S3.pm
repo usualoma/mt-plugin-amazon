@@ -48,12 +48,14 @@ sub new_url {
 		my @domains = split(
 			',', $config->{'amazon_s3_distribution_domain_names'}
 		);
-		my $res = 'http://' .$domains[$domain_name_index]. '/' . $path . $ts;
+		my $domain = $domains[$domain_name_index];
+		$domain = 'http://' . $domain unless $domain =~ m{^https?:};
+		my $res = $domain . '/' . $path . $ts;
 		$domain_name_index = ($domain_name_index + 1) % @domains;
 		$res;
 	}
 	else {
-		'http://' . $config->{'amazon_s3_bucket'} . '.s3.amazonaws.com/' . $path;
+		'https://' . $config->{'amazon_s3_bucket'} . '.s3.amazonaws.com/' . $path;
 	}
 }
 
@@ -109,7 +111,7 @@ sub _hdlr_link {
 
 		if ($tmpl->amazon_s3_enabled) {
 			my $scope = 'blog:' . $blog_id;
-			$url =~ s{\Ahttp://[^/]*}{};
+			$url =~ s{\Ahttps?://[^/]*}{};
 			$url =~ s{\A/*}{};
 			return &MT::Amazon::S3::new_url($scope, $url);
 		}
@@ -137,7 +139,7 @@ sub build_file {
 	$s3 or return 1;
 
 	my $url = $params{'FileInfo'}->url;
-	$url =~ s{\Ahttp://[^/]*}{};
+	$url =~ s{\Ahttps?://[^/]*}{};
 	$url =~ s{\A/*}{};
 
 	my ($ext) = ($url =~ m/([^\.]+)\z/);
