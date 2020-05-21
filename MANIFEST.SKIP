@@ -1,55 +1,32 @@
+# version control
+\bCVS
+(^|/)\.
+
+# CPAN chain files
 ^MANIFEST
-\bBuild.PL$
-#^Makefile
-#^META.yml$
-#^blib/
-#~$
-
-
-# Avoid version control files.
-\bRCS\b
-\bCVS\b
-,v$
-\B\.svn\b
-\B\.git\b
-\B\.cvsignore$
-
-# Avoid Makemaker generated and utility files.
-\bMakefile$
-\bblib
-\bMakeMaker-\d
-\bpm_to_blib$
-\bblibdirs$
-^MANIFEST\.SKIP$
-
-# Avoid Module::Build generated and utility files.
-\bBuild$
-\bBuild.bat$
-\b_build
-
-# Avoid Devel::Cover generated files
-\bcover_db
-
-# Avoid temp and backup files.
-~$
-\.tmp$
-\.old$
-\.bak$
-\#$
-\.#
-\.rej$
-
-# Avoid OS-specific files/dirs
-#   Mac OSX metadata
-\B\.DS_Store
-#   Mac OSX SMB mount metadata files
-\B\._
-# Avoid archives of this distribution
-\bAmazon-[\d\.\_]+
-
-cover
-support
-
-README.md
+^Makefile
+^META.yml$
 ^MYMETA.yml$
-^MYMETA\.json$
+^MYMETA.json$
+^blib/
+
+# Artwork data for description
+^artwork/
+
+# Raw source file
+^src/
+
+# Build tools
+Gruntfile
+package.json
+^tools/
+
+# npm working directory
+^node_modules/
+
+# packages
+\.zip$
+\.tar\.gz$
+
+# Github pages
+^docs/
