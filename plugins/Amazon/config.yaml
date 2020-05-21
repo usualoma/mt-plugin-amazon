@@ -1,7 +1,7 @@
 #plugin information
 id: Amazon
 name: Amazon
-version: 1.0.0
+version: 1.0.1
 
 #about this plugin
 description: <__trans phrase="Function set for Amazon API">
